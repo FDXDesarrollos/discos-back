@@ -1,6 +1,6 @@
 package net.fdxdesarrollos.albums.security.controller;
 
-import java.util.ArrayList;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,10 +16,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -113,9 +111,16 @@ public class AuthController {
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getUsuario(), loginUser.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = jwtProvider.generateToken(authentication);
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		JwtDto jwtDto = new JwtDto(jwt, userDetails.getUsername(), userDetails.getAuthorities());		
+		JwtDto jwtDto = new JwtDto(jwt);		
 		return new ResponseEntity(jwtDto, HttpStatus.OK);
 	}
+	
+	@PostMapping("/refresh")
+	public ResponseEntity<JwtDto> refresh(@RequestBody JwtDto jwtDto) throws ParseException {
+		String token = jwtProvider.refreshToken(jwtDto);
+		JwtDto jwt = new JwtDto(token);
+		return new ResponseEntity(jwt, HttpStatus.OK);
+	}
+	
 	
 }

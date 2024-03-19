@@ -9,6 +9,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class Privilegio implements UserDetails {
+	private static final long serialVersionUID = 1L;
+	
 	private String nombre;
 	private String email;	
 	private String usuario;
@@ -36,6 +38,11 @@ public class Privilegio implements UserDetails {
 				              authorities);
 	}
 	
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }	
+	
 	public String getNombre() {
 		return nombre;
 	}
@@ -53,11 +60,6 @@ public class Privilegio implements UserDetails {
 	public String getPassword() {
 		return password;
 	}
-	
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return authorities;
-	}	
 	
 	@Override
 	public boolean isAccountNonExpired() {
