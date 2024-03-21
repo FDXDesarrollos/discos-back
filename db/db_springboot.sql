@@ -3,15 +3,15 @@
 
  Source Server         : LocalHost
  Source Server Type    : MariaDB
- Source Server Version : 100338
+ Source Server Version : 100339
  Source Host           : 127.0.0.1:3366
  Source Schema         : db_springboot
 
  Target Server Type    : MariaDB
- Target Server Version : 100338
+ Target Server Version : 100339
  File Encoding         : 65001
 
- Date: 04/01/2024 11:42:15
+ Date: 21/03/2024 12:30:11
 */
 
 SET NAMES utf8mb4;
@@ -48,46 +48,6 @@ INSERT INTO `albums` VALUES (10, '2023-12-27 00:00:00', 'ZZZZZZZZZ', 'ZZZZZZZZZ'
 COMMIT;
 
 -- ----------------------------
--- Table structure for producto
--- ----------------------------
-DROP TABLE IF EXISTS `producto`;
-CREATE TABLE `producto` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(255) DEFAULT NULL,
-  `precio` float NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
--- ----------------------------
--- Records of producto
--- ----------------------------
-BEGIN;
-INSERT INTO `producto` VALUES (1, 'QUESO RANCIO', 10);
-INSERT INTO `producto` VALUES (2, 'QUESO DOBLE CREMA', 20);
-INSERT INTO `producto` VALUES (3, 'QUESO RAYADO', 15);
-INSERT INTO `producto` VALUES (4, 'QUESO BLANCO', 15);
-INSERT INTO `producto` VALUES (5, 'QUESO AMARILLO', 20);
-COMMIT;
-
--- ----------------------------
--- Table structure for rol
--- ----------------------------
-DROP TABLE IF EXISTS `rol`;
-CREATE TABLE `rol` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `rol_nombre` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
--- ----------------------------
--- Records of rol
--- ----------------------------
-BEGIN;
-INSERT INTO `rol` VALUES (1, 'ROLE_ADMIN');
-INSERT INTO `rol` VALUES (2, 'ROLE_USER');
-COMMIT;
-
--- ----------------------------
 -- Table structure for roles
 -- ----------------------------
 DROP TABLE IF EXISTS `roles`;
@@ -106,48 +66,6 @@ INSERT INTO `roles` VALUES (2, 'ROLE_USER');
 COMMIT;
 
 -- ----------------------------
--- Table structure for usuario
--- ----------------------------
-DROP TABLE IF EXISTS `usuario`;
-CREATE TABLE `usuario` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email` varchar(255) NOT NULL,
-  `nombre` varchar(255) NOT NULL,
-  `nombre_usuario` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_puhr3k3l7bj71hb7hk7ktpxn0` (`nombre_usuario`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
--- ----------------------------
--- Records of usuario
--- ----------------------------
-BEGIN;
-INSERT INTO `usuario` VALUES (1, 'fdxdesarrollos@gmail.com', 'admin', 'admin', '$2a$10$kDBWpHAGK0qL.TnyLrz2sOlQtgtDbK53JsmXDnib9eR3l45lM6cnG');
-INSERT INTO `usuario` VALUES (2, 'usuario@gmail.com', 'user', 'user', '$2a$10$jk4F49/klfc27aY5koRAVOY2GUVUpFeyMYfZ.p8omvv9TOFnxWN.y');
-COMMIT;
-
--- ----------------------------
--- Table structure for usuario_rol
--- ----------------------------
-DROP TABLE IF EXISTS `usuario_rol`;
-CREATE TABLE `usuario_rol` (
-  `usuario_id` int(11) NOT NULL,
-  `rol_id` int(11) NOT NULL,
-  PRIMARY KEY (`usuario_id`,`rol_id`),
-  KEY `FKe3kd49gu3mhj2ty5kl44qsytp` (`rol_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
--- ----------------------------
--- Records of usuario_rol
--- ----------------------------
-BEGIN;
-INSERT INTO `usuario_rol` VALUES (1, 1);
-INSERT INTO `usuario_rol` VALUES (1, 2);
-INSERT INTO `usuario_rol` VALUES (2, 2);
-COMMIT;
-
--- ----------------------------
 -- Table structure for usuarios
 -- ----------------------------
 DROP TABLE IF EXISTS `usuarios`;
@@ -157,6 +75,7 @@ CREATE TABLE `usuarios` (
   `nombre` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `usuario` varchar(255) NOT NULL,
+  `tokenPassword` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_kfsp0s1tflm1cwlj8idhqsad0` (`email`),
   UNIQUE KEY `UK_3m5n1w5trapxlbo2s42ugwdmd` (`usuario`)
@@ -166,9 +85,9 @@ CREATE TABLE `usuarios` (
 -- Records of usuarios
 -- ----------------------------
 BEGIN;
-INSERT INTO `usuarios` VALUES (1, 'webmaster@gmail.com', 'webmaster', '$2a$10$qZ1v5HDkPW/p.mMZCJ3OsO.TFFVi6CR5lNmewjpvvlkVQWN3M7bn2', 'admin');
-INSERT INTO `usuarios` VALUES (2, 'gabo@gmail.com', 'gabo', '$2a$10$eLlFCPFWmQBh3uEw0oxla.2qs8o5cE0BF2cTnjPEmnoHnbq.Ilu6q', 'user');
-INSERT INTO `usuarios` VALUES (3, 'asdasdasd@gmail.com', 'asdasdasd adasdsad tertetet', '$2a$10$oLpy0mvSYIOHh2JWJZA79uXlRf15gBoQY49mIHlFbNKfEoPG3Wphq', 'asno');
+INSERT INTO `usuarios` VALUES (1, 'fdxdesarrollos@gmail.com', 'FDX', '$2a$10$ek1w7p.8g/NPjQK5/tCkQe28D3t0JS1gN8quhMhzsLdpZ4LeOAW02', 'admin', NULL);
+INSERT INTO `usuarios` VALUES (2, 'usuario@gmail.com', 'USER', '$2y$10$DFh2G5qHI3i302dZg4RCFeCMIarBprfxWczvGSDalYkqwWz6xz0Hm', 'user', NULL);
+INSERT INTO `usuarios` VALUES (3, 'gabo@gmail.com', 'GABO', '$2a$10$vWmx5UM6exPH3Eso9H/bmuyBDyYW5BAJPQRpCyfcrMbNADL.tlrgW', 'gabo', NULL);
 COMMIT;
 
 -- ----------------------------

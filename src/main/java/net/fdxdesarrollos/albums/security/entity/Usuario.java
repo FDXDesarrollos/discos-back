@@ -47,6 +47,8 @@ public class Usuario implements Serializable {
 	@NotEmpty
 	@NotNull
 	private String password;
+
+	private String tokenPassword;
 	
 	@NotEmpty
 	@NotNull
@@ -106,6 +108,14 @@ public class Usuario implements Serializable {
 		this.password = password;
 	}
 
+	public String getTokenPassword() {
+		return tokenPassword;
+	}
+
+	public void setTokenPassword(String tokenPassword) {
+		this.tokenPassword = tokenPassword;
+	}
+
 	public Set<Rol> getRoles() {
 		return roles;
 	}
@@ -113,13 +123,11 @@ public class Usuario implements Serializable {
 	public void setRoles(Set<Rol> roles) {
 		this.roles = roles;
 	}
-
 	
 	@Override
 	public String toString() {
 		return "Usuario [id=" + id + ", nombre=" + nombre + ", email=" + email + ", usuario=" + usuario + ", password="
 				+ password + ", roles=" + roles + "]";
 	}	
-	
 	
 }

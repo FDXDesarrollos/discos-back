@@ -16,8 +16,8 @@ public class UserDetailServiceImp implements UserDetailsService {
 	UsuarioService usuarioService;
 	
 	@Override
-	public UserDetails loadUserByUsername(String usuario) throws UsernameNotFoundException {
-		Usuario user = usuarioService.getByUsuario(usuario).get();
+	public UserDetails loadUserByUsername(String usuariOrEmail) throws UsernameNotFoundException {
+		Usuario user = usuarioService.getByUsuarioOrEmail(usuariOrEmail).get();
 		return Privilegio.build(user);
 	}
 	
