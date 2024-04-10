@@ -3,7 +3,6 @@ package net.fdxdesarrollos.albums.controller;
 import java.util.List;
 import java.util.Objects;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.fdxdesarrollos.albums.entity.Album;
-import net.fdxdesarrollos.albums.entity.Mensaje;
+import io.micrometer.common.util.StringUtils;
+import jakarta.validation.Valid;
+import net.fdxdesarrollos.albums.dto.AlbumDto;
+import net.fdxdesarrollos.albums.dto.Mensaje;
 import net.fdxdesarrollos.albums.service.AlbumService;
 
 @RestController
@@ -32,72 +33,35 @@ public class AlbumController {
 	private AlbumService albumService;
 	
 	@GetMapping("/listar")
-	public ResponseEntity<List <Album>> list() {
-		List<Album> list = albumService.list();
-		return new ResponseEntity<List<Album>>(list, HttpStatus.OK);
+	public ResponseEntity<List <AlbumDto>> list() {
+		return ResponseEntity.ok( albumService.list() );
 	}
 	
 	@GetMapping("/detalle/{id}")
-	public ResponseEntity<Album> getById(@PathVariable("id") int id) {
-		if(!albumService.existsById(id))
-			return new ResponseEntity(new Mensaje("Album no encontrado"), HttpStatus.NOT_FOUND);
-		
-		Album album = albumService.getOne(id).get();
-		
-		return new ResponseEntity<Album>(album, HttpStatus.OK);
+	public ResponseEntity<AlbumDto> getById(@PathVariable("id") int id) {
+		return ResponseEntity.ok( albumService.getOne(id) );
 	}
 	
 	@GetMapping("/titulo/{titulo}")
-	public ResponseEntity<Album> getByTitulo(@PathVariable("titulo") String titulo) {
-		if(!albumService.existsByTitulo(titulo))
-			return new ResponseEntity(new Mensaje("Album no encontrado"), HttpStatus.NOT_FOUND);
-		
-		Album album = albumService.getByTitulo(titulo).get();
-		return new ResponseEntity<Album>(album, HttpStatus.OK);
+	public ResponseEntity<AlbumDto> getByTitulo(@PathVariable("titulo") String titulo) {
+		return ResponseEntity.ok( albumService.getByTitulo(titulo) );
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/agregar")
-	public ResponseEntity<?> create(@RequestBody Album album) {
-		if(StringUtils.isBlank(album.getTitulo()))
-			return new ResponseEntity(new Mensaje("El titulo es obligatorio"), HttpStatus.BAD_REQUEST);
-		
-		if(albumService.existsByTitulo(album.getTitulo()))
-			return new ResponseEntity(new Mensaje("El titulo ya existe"), HttpStatus.BAD_REQUEST);		
-		
-		if(Objects.isNull(album.getPrecio()) || album.getPrecio() < 0)
-			return new ResponseEntity(new Mensaje("El precio debe ser mayor que 0"), HttpStatus.BAD_REQUEST);
-		
-		albumService.save(album);
-		return new ResponseEntity(new Mensaje("Información registrada"), HttpStatus.OK);
+	public ResponseEntity<Mensaje> create(@RequestBody AlbumDto dto) {
+		return ResponseEntity.ok(albumService.save(dto));
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<?> update(@PathVariable("id") int id, @RequestBody Album album) {
-		if(!albumService.existsById(id))
-			return new ResponseEntity(new Mensaje("Album no encontrado"), HttpStatus.NOT_FOUND);		
-		
-		if(StringUtils.isBlank(album.getTitulo()))
-			return new ResponseEntity(new Mensaje("El titulo es obligatorio"), HttpStatus.BAD_REQUEST);
-		
-		if(albumService.existsByTitulo(album.getTitulo()) && albumService.getByTitulo(album.getTitulo()).get().getId() != id)
-			return new ResponseEntity(new Mensaje("El titulo ya existe"), HttpStatus.BAD_REQUEST);		
-		
-		if(Objects.isNull(album.getPrecio()) || album.getPrecio() < 0)
-			return new ResponseEntity(new Mensaje("El precio debe ser mayor que 0"), HttpStatus.BAD_REQUEST);
-		
-		albumService.save(album);
-		return new ResponseEntity(new Mensaje("Información actualizada"), HttpStatus.OK);
+	public ResponseEntity<Mensaje> update(@PathVariable("id") int id, @Valid @RequestBody AlbumDto dto) {
+		return ResponseEntity.ok(albumService.update(id, dto));
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/eliminar/{id}")
-	public ResponseEntity<?> delete(@PathVariable("id") int id) {
-		if(!albumService.existsById(id))
-			return new ResponseEntity(new Mensaje("Album no encontrado"), HttpStatus.NOT_FOUND);
-		
-		albumService.delete(id);
-		return new ResponseEntity(new Mensaje("Información eliminada"), HttpStatus.OK);
+	public ResponseEntity<Mensaje> delete(@PathVariable("id") int id) {		
+		return ResponseEntity.ok(albumService.delete(id));
 	}
 }

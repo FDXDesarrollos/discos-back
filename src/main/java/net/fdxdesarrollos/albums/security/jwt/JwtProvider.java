@@ -1,5 +1,8 @@
 package net.fdxdesarrollos.albums.security.jwt;
 
+
+import java.security.Key;
+import java.security.SignatureException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -19,9 +22,9 @@ import com.nimbusds.jwt.JWTParser;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import net.fdxdesarrollos.albums.security.dto.JwtDto;
 import net.fdxdesarrollos.albums.security.entity.Privilegio;
 
@@ -49,18 +52,27 @@ public class JwtProvider {
 				   .setSubject(privilegio.getUsername())
 				   .claim("roles", roles)
 				   .setIssuedAt(new Date())
-				   .setExpiration(new Date(new Date().getTime() + expiration))
-				   .signWith(SignatureAlgorithm.HS512, secret.getBytes())
+				   .setExpiration(new Date(new Date().getTime() + expiration * 180))
+				   .signWith(getSecret(secret))
 				   .compact();
 	}
 	
 	public String getNombreUsuarioFromToken(String token) {
-		return Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token).getBody().getSubject();
+		return Jwts.parserBuilder()
+				   .setSigningKey(getSecret(secret))
+				   .build()
+				   .parseClaimsJws(token)
+				   .getBody()
+				   .getSubject();
 	}
 	
-	public boolean validateToken(String token) {
+	public boolean validateToken(String token) throws SignatureException {
 		try {
-			Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token);
+			Jwts.parserBuilder()
+			    .setSigningKey(secret.getBytes())
+			    .build()
+			    .parseClaimsJws(token);
+			
 			return true;
 		}catch(MalformedJwtException e) {
 			logger.error("Token mal formado");
@@ -74,9 +86,6 @@ public class JwtProvider {
 		}catch(IllegalArgumentException e) {
 			logger.error("Token vacio");
 		
-		}catch(SignatureException e) {
-			logger.error("Fallo en la firma");
-			
 		}
 
 		return false;
@@ -84,7 +93,10 @@ public class JwtProvider {
 	
 	public String refreshToken(JwtDto jwtDto) throws ParseException {
 		try {
-			Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(jwtDto.getToken());
+			Jwts.parserBuilder()
+			    .setSigningKey(getSecret(secret))
+			    .build()
+			    .parseClaimsJws(jwtDto.getToken());
 		} catch (ExpiredJwtException ex) {
 			JWT jwt = JWTParser.parse(jwtDto.getToken());
 			JWTClaimsSet claims = jwt.getJWTClaimsSet();
@@ -96,10 +108,15 @@ public class JwtProvider {
 					   .claim("roles", roles)
 					   .setIssuedAt(new Date())
 					   .setExpiration(new Date(new Date().getTime() + expiration))
-					   .signWith(SignatureAlgorithm.HS512, secret.getBytes())
+					   .signWith(getSecret(secret))
 					   .compact();			
 		}
 		
 		return null;
+	}
+	
+	private Key getSecret(String secret) {
+		byte[] secretBytes = Decoders.BASE64URL.decode(secret);
+		return Keys.hmacShaKeyFor(secretBytes);
 	}
 }

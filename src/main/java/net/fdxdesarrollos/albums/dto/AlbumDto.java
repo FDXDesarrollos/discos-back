@@ -1,47 +1,47 @@
-package net.fdxdesarrollos.albums.entity;
+package net.fdxdesarrollos.albums.dto;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name="albums")
-public class Album {
+public class AlbumDto {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@NotBlank
+	@NotBlank(message = "El titulo es obligatorio")
 	private String titulo;
 	
-	@NotBlank
+	@NotBlank(message = "El interprete es obligatorio")
 	private String interprete;
 	
 	//@NotBlank
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "es-MX", timezone = "America/Mexico_City") 
 	private Date fecha;
 	
-	@NotBlank
+	@NotBlank(message = "El genero musical es obligatorio")
 	private String genero;
 	
-	@Min(0)
+	@Min(value = 0, message = "El precio es obligatorio")
 	private Double precio;
 	
 	
-	public Album() {
+	public AlbumDto() {
 		super();
 	}
 
-	public Album(Integer id, String titulo, String interprete, Date fecha, String genero, Double precio) {
+	public AlbumDto(Integer id, String titulo, String interprete, Date fecha, String genero, Double precio) {
 		super();
 		this.id = id;
 		this.titulo = titulo;

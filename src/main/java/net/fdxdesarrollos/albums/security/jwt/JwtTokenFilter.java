@@ -2,19 +2,19 @@ package net.fdxdesarrollos.albums.security.jwt;
 
 import java.io.IOException;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import net.fdxdesarrollos.albums.security.service.UserDetailServiceImp;
 
 /***
@@ -23,6 +23,7 @@ import net.fdxdesarrollos.albums.security.service.UserDetailServiceImp;
  * para permitir el acceso al recurso y en caso contrario lanzara la excepción 
  */
 
+@Component
 public class JwtTokenFilter extends OncePerRequestFilter {
 	private final static Logger logger = LoggerFactory.getLogger(JwtTokenFilter.class);
 	

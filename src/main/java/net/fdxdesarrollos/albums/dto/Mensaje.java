@@ -1,4 +1,4 @@
-package net.fdxdesarrollos.albums.entity;
+package net.fdxdesarrollos.albums.dto;
 
 public class Mensaje {
 	private String mensaje;

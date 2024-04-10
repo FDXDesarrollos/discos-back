@@ -1,14 +1,14 @@
 package net.fdxdesarrollos.albums.recovery.Dto;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 public class ChangePasswordDTO {
 
-    @NotBlank
+    @NotBlank(message = "La contraseña es requerida")
     private String password;
-    @NotBlank
+    @NotBlank(message = "Repetir la contraseña")
     private String confirmPassword;
-    @NotBlank
+    @NotBlank(message = "Token obligatorio")
     private String tokenPassword;
 
     public ChangePasswordDTO() {

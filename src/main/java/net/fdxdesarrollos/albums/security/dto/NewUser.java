@@ -4,29 +4,25 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 public class NewUser implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	@NotEmpty
-	@NotNull
+	@NotBlank(message = "El nombre es requerido")
 	private String nombre;
 	
-	@NotEmpty
-	@NotNull
-	@Email
+	@Email(message = "Formato de correo invalido")
+	@NotBlank(message = "El email es requerido")
 	private String email;
 	
-	@NotEmpty
-	@NotNull
+	@NotBlank(message = "El usuario es requerido")
 	private String usuario;
 	
-	@NotEmpty
-	@NotNull
+	@NotBlank(message = "El password es requerido")
 	private String password;
 	
 	private Set<String> roles = new HashSet<>();

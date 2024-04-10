@@ -1,12 +1,12 @@
 package net.fdxdesarrollos.albums.security.dto;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 
 public class LoginUser {
-	@NotEmpty
+	@NotBlank(message = "Usuario/Email es requerido")
 	private String usuario;
 	
-	@NotEmpty
+	@NotBlank(message = "Contraseña es requerido")
 	private String password;
 
 	public String getUsuario() {
